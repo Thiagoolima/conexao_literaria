@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int        @id @default(autoincrement())
+  name               String
+  email              String     @unique
+  password           String
+  active             Boolean    @default(false)
+  token_verification String?
+  created_at         DateTime   @default(now())
+  books              Book[]
+  bookcases          BookCase[]
+  wishlists          WishList[]
+
+  @@map("users")
+}
+
+model Book {
+  id           Int        @id @default(autoincrement())
+  title        String
+  author       String?
+  publisher    String?
+  isbn         Int?       @unique
+  description  String?
+  url_img      String?
+  fk_user_book User       @relation(fields: [user_id], references: [id])
+  user_id      Int
+  cases        BookCase[]
+  wishs        WishList[]
+
+  @@map("books")
+}
+
+model BookCase {
+  id           Int  @id @default(autoincrement())
+  fk_book_case Book @relation(fields: [book_id], references: [id])
+  book_id      Int
+  fk_user_case User @relation(fields: [user_id], references: [id])
+  user_id      Int
+
+  @@map("book_cases")
+}
+
+model WishList {
+  id           Int  @id @default(autoincrement())
+  fk_user_wish User @relation(fields: [user_id], references: [id])
+  user_id      Int
+  fk_book_wish Book @relation(fields: [book_id], references: [id])
+  book_id      Int
+
+  @@map("wish_lists")
+}
