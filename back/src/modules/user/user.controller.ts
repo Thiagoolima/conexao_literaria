@@ -7,15 +7,15 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDTO } from './user.dto';
+import { UserDTO } from './dto/user.dto';
 import { EmailExistsGuard } from '../../middlewares/email-exists.middleware';
 import { PrismaService } from 'src/database/PrismaService';
 
-@Controller('user/newuser')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  @Post('newuser')
   @UseGuards(new EmailExistsGuard(false, new PrismaService()))
   async create(@Body() data: UserDTO) {
     try {

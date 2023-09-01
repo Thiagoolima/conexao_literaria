@@ -39,4 +39,14 @@ export class AuthController {
       throw new HttpException(error.response, error.status);
     }
   }
+
+  @Post('/forgot-password')
+  async recoveryPassword(@Body('email') email: string) {
+    return await this.authService.forgotPassword(email);
+  }
+
+  @Get('recovery-password')
+  async newPassword(@Query('token') token: string) {
+    await this.authService.recoveryPassword(token);
+  }
 }
